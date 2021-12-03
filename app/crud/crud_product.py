@@ -20,10 +20,10 @@ def create_product(db: Session, product: ProductCreate):
     """
     Crea un nuevo producto
     """
-    db_product = PlaceModel(**product.dict)
+    db_product = ProductModel(**product.dict())
     db.add(db_product)
     db.commit()
-    db.refresh()
+    db.refresh(db_product)
     return db_product
 
 def update_product(db: Session, *,db_ojb: ProductModel, obj_in: ProductUpdate) -> ProductModel:

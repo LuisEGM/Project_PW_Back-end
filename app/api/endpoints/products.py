@@ -1,3 +1,4 @@
+from os import SEEK_CUR
 from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -11,7 +12,7 @@ def read_product(db: Session = Depends(deps.get_db), skip: int = 0, limit: int =
     return crud_product.get_all_products(db=db, skip=skip, limit=limit)
 
 @router.post("/products/", response_model=product.Product)
-def create_item(*,db: Session = Depends(deps.get_db), product_in: product.ProductCreate) -> Any:
+def create_product(*,db: Session = Depends(deps.get_db), product_in: product.ProductCreate) -> Any:
     place = crud_product.create_product(db=db, product=product_in)
     return place
 
@@ -30,4 +31,12 @@ def read_product(*,db: Session = Depends(deps.get_db), id: int) -> Any:
     product = crud_product.get_product(db=db, product_id=id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
+    return product
+
+@router.delete("/products/{id}", response_model=product.Product)
+def delete_product(*,db: Session = Depends(deps.get_db), id: int) -> Any:
+    product = crud_product.get_product(db=db, product_id=id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    product = crud_product.delete_product(db=db, id=id)
     return product
