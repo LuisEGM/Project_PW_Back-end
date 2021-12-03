@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session, session
 from app.model.product import Product as ProductModel
 from app.schema.product import ProductCreate, ProductUpdate, Product
 
-
 def get_product(db: Session, product_id: int) -> ProductModel:
     """
     Obtener un producto por Id
