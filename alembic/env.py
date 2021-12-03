@@ -17,7 +17,7 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from app.database.sessions import Base
+from app.database.session import Base
 from app.core.config import settings
 
 config.set_main_option("sqlalchemy.url", settings.SQL_ALCHEMY_DATABASE_URI)
