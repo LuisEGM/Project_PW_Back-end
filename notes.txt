@@ -1,6 +1,22 @@
 COMANDOS DE ALEMBIC
 > poetry run alembic init alembic
+> poetry run alembic revision --autogenerate -m "Create table"
 > poetry run alembic upgrade head
 
 COMANDOS PARA CORRER EL PROYECTO
 > poetry run uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+
+// AGREGAR LAS CONFIGURACIONES DESPUES DE HACER EL ALEMBIC INIT
+# add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
+from app.database.base import Base
+from app.core.config import settings
+config.set_main_option("sqlalchemy.url", settings.SQL_ALCHEMY_DATABASE_URI)
+
+# add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
+target_metadata = Base.metadata
