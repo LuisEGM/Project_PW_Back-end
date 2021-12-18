@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.schema import product
 from app.crud import crud_product
 from app.api import deps
+from app.model.user import User as UserModel
 
 router = APIRouter()
 @router.get("/products/", response_model=List[product.Product])
@@ -12,13 +13,13 @@ def read_product(db: Session = Depends(deps.get_db), skip: int = 0, limit: int =
     return crud_product.get_all_products(db=db, skip=skip, limit=limit)
 
 @router.post("/products/", response_model=product.Product)
-def create_product(*,db: Session = Depends(deps.get_db), product_in: product.ProductCreate) -> Any:
+def create_product(*,db: Session = Depends(deps.get_db), product_in: product.ProductCreate, current_user: UserModel = Depends(deps.get_current_user)) -> Any:
     place = crud_product.create_product(db=db, product=product_in)
     return place
 
 
 @router.put("/products/{id}", response_model=product.Product)
-def update_product(*,db: Session = Depends(deps.get_db), id: int, product_in: product.ProductUpdate) -> Any:
+def update_product(*,db: Session = Depends(deps.get_db), id: int, product_in: product.ProductUpdate, current_user: UserModel = Depends(deps.get_current_user)) -> Any:
     productInDB = crud_product.get_product(db, product_id=id)
     if not productInDB:
         raise HTTPException(status_code=404, detail="Product not found")
@@ -34,7 +35,7 @@ def read_product(*,db: Session = Depends(deps.get_db), id: int) -> Any:
     return product
 
 @router.delete("/products/{id}", response_model=product.Product)
-def delete_product(*,db: Session = Depends(deps.get_db), id: int) -> Any:
+def delete_product(*,db: Session = Depends(deps.get_db), id: int, current_user: UserModel = Depends(deps.get_current_user)) -> Any:
     product = crud_product.get_product(db=db, product_id=id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
