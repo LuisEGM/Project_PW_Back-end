@@ -35,7 +35,6 @@ def read_users_me(current_user: UserModel = Depends(deps.get_current_user)):
     """
     Fetch the current logged in user.
     """
-    print("QUE PASA CON EL ME")
     user = current_user
     return user
 
